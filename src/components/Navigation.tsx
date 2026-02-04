@@ -1,18 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Droplet, Menu, X } from 'lucide-react';
 
 export default function Navigation() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -35,29 +26,20 @@ export default function Navigation() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'bg-slate-900/95 backdrop-blur-lg shadow-lg'
-            : 'bg-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             <motion.div
-              className="flex items-center space-x-2 cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 cursor-pointer flex-shrink-0"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => scrollToSection('home')}
             >
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Droplet className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" fill="currentColor" />
-              </motion.div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white">AutoDrip</h1>
-                <p className="text-[10px] sm:text-xs text-cyan-400 -mt-1">It's in the detail</p>
+              <Droplet className="w-7 h-7 sm:w-8 sm:h-8 text-cyan-400 flex-shrink-0" fill="currentColor" />
+              <div className="flex flex-col min-w-0">
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-white leading-tight">AutoDrip</h1>
+                <p className="text-[9px] sm:text-[10px] md:text-xs text-cyan-400 leading-tight">It's in the detail</p>
               </div>
             </motion.div>
 
@@ -95,19 +77,19 @@ export default function Navigation() {
               </motion.a>
             </div>
 
-            <div className="flex items-center gap-3 md:hidden">
+            <div className="flex items-center gap-2 md:hidden flex-shrink-0">
               <motion.a
                 href="https://wa.me/27715939032"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-4 py-2 rounded-full font-semibold text-sm"
+                className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-3 py-1.5 rounded-full font-semibold text-xs whitespace-nowrap"
                 whileTap={{ scale: 0.95 }}
               >
                 Book
               </motion.a>
               <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white p-2"
+                className="text-white p-2 flex-shrink-0"
                 whileTap={{ scale: 0.9 }}
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

@@ -41,26 +41,6 @@ export default function Gallery() {
   return (
     <>
       <section id="gallery" className="py-20 bg-slate-900 relative overflow-hidden">
-        {/* Animated Background */}
-        <motion.div 
-          className="absolute top-0 right-0 w-96 h-96 bg-cyan-500 rounded-full filter blur-3xl opacity-20"
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-20"
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, -50, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -93,22 +73,12 @@ export default function Gallery() {
             {galleryItems.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  rotateY: 5,
-                  z: 50,
-                  transition: { duration: 0.3 }
-                }}
-                className="group cursor-pointer perspective-1000"
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                whileHover={{ scale: 1.03 }}
+                className="group cursor-pointer"
                 onClick={() => setSelectedImage(item.after)}
               >
                 <motion.div 
@@ -150,20 +120,9 @@ export default function Gallery() {
                   </motion.div>
 
                   {/* Badge */}
-                  <motion.div
-                    className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg"
-                    initial={{ scale: 0, rotate: -180 }}
-                    whileInView={{ scale: 1, rotate: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      delay: 0.3 + index * 0.1,
-                      type: "spring",
-                      stiffness: 200
-                    }}
-                    whileHover={{ scale: 1.1 }}
-                  >
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                     AFTER
-                  </motion.div>
+                  </div>
                 </motion.div>
               </motion.div>
             ))}

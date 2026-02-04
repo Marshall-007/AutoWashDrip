@@ -1,6 +1,5 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Sparkles, Sun, Zap, Droplet, Shield, Car, Sofa, Wind, Wrench, Palette } from 'lucide-react';
-import { useRef } from 'react';
 
 const services = [
   {
@@ -76,25 +75,8 @@ const services = [
 ];
 
 export default function Services() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   return (
-    <section id="services" ref={containerRef} className="py-20 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
-      {/* Floating Background Elements */}
-      <motion.div 
-        className="absolute top-20 right-10 w-72 h-72 bg-cyan-200 rounded-full filter blur-3xl opacity-20"
-        style={{ y }}
-      />
-      <motion.div 
-        className="absolute bottom-20 left-10 w-96 h-96 bg-teal-200 rounded-full filter blur-3xl opacity-20"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [-100, 100]) }}
-      />
-
+    <section id="services" className="py-20 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -104,29 +86,15 @@ export default function Services() {
           className="text-center mb-16"
         >
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            transition={{ 
-              duration: 0.5,
-              type: "spring",
-              stiffness: 200
-            }}
+            transition={{ duration: 0.5 }}
             className="inline-block mb-4"
           >
-            <motion.div 
-              className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg"
-              animate={{
-                boxShadow: [
-                  '0 0 20px rgba(6, 182, 212, 0.3)',
-                  '0 0 30px rgba(6, 182, 212, 0.5)',
-                  '0 0 20px rgba(6, 182, 212, 0.3)',
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
+            <div className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
               ⚡ Discounted up to 50%
-            </motion.div>
+            </div>
           </motion.div>
 
           <motion.h2 
@@ -155,42 +123,17 @@ export default function Services() {
             return (
               <motion.div
                 key={service.title}
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.5, 
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                whileHover={{ 
-                  y: -15, 
-                  scale: 1.03,
-                  transition: { duration: 0.3 } 
-                }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                whileHover={{ y: -10 }}
                 className="group relative"
               >
-                <motion.div 
-                  className={`absolute inset-0 bg-gradient-to-br ${service.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl`}
-                />
                 <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full">
-                  <motion.div 
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4 relative overflow-hidden`}
-                    whileHover={{ 
-                      rotate: [0, -10, 10, -10, 0],
-                      scale: 1.1 
-                    }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 animate-shimmer"
-                      initial={{ x: '-100%' }}
-                      whileHover={{ x: '100%' }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <Icon className="w-8 h-8 text-white relative z-10" />
-                  </motion.div>
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-600 transition-colors">
                     {service.title}
                   </h3>
