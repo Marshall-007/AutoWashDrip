@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, ZoomIn } from 'lucide-react';
 
 const galleryItems = [
   {
@@ -37,12 +37,31 @@ const galleryItems = [
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [sliderPosition, setSliderPosition] = useState(50);
 
   return (
     <>
-      <section id="gallery" className="py-20 bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="gallery" className="py-20 bg-slate-900 relative overflow-hidden">
+        {/* Animated Background */}
+        <motion.div 
+          className="absolute top-0 right-0 w-96 h-96 bg-cyan-500 rounded-full filter blur-3xl opacity-20"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500 rounded-full filter blur-3xl opacity-20"
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -50, 0],
+            y: [0, -30, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -50,58 +69,102 @@ export default function Gallery() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               Our Work Speaks Volumes
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               See the AutoDrip difference with real before & after transformations
-            </p>
+            </motion.p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryItems.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="group cursor-pointer"
+                initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotateY: 5,
+                  z: 50,
+                  transition: { duration: 0.3 }
+                }}
+                className="group cursor-pointer perspective-1000"
                 onClick={() => setSelectedImage(item.after)}
               >
-                <div className="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3]">
-                  <div className="absolute inset-0 flex">
-                    <div className="w-1/2 overflow-hidden">
-                      <img
-                        src={item.before}
-                        alt={`${item.title} - Before`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="w-1/2 overflow-hidden">
-                      <img
-                        src={item.after}
-                        alt={`${item.title} - After`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
+                <motion.div 
+                  className="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3]"
+                  whileHover={{ boxShadow: "0 20px 60px rgba(6, 182, 212, 0.4)" }}
+                >
+                  {/* Main Image */}
+                  <img
+                    src={item.after}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Hover Overlay */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={{ y: 100 }}
+                    whileHover={{ y: 0 }}
+                  >
                     <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <h3 className="text-white font-bold text-xl mb-2">{item.title}</h3>
-                      <div className="flex gap-4 text-sm">
-                        <span className="text-gray-300">Before</span>
-                        <span className="text-cyan-400">→</span>
-                        <span className="text-cyan-400">After</span>
-                      </div>
+                      <motion.h3 
+                        className="text-white font-bold text-xl mb-2"
+                        initial={{ y: 20, opacity: 0 }}
+                        whileHover={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        {item.title}
+                      </motion.h3>
+                      <motion.div
+                        className="mt-2 flex items-center gap-2 text-cyan-400 text-sm"
+                        initial={{ y: 20, opacity: 0 }}
+                        whileHover={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <ZoomIn className="w-4 h-4" />
+                        <span>Click to view full image</span>
+                      </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 bg-white h-full"></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full border-4 border-cyan-500 shadow-lg"></div>
-                </div>
+                  {/* Badge */}
+                  <motion.div
+                    className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg"
+                    initial={{ scale: 0, rotate: -180 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      delay: 0.3 + index * 0.1,
+                      type: "spring",
+                      stiffness: 200
+                    }}
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    AFTER
+                  </motion.div>
+                </motion.div>
               </motion.div>
             ))}
           </div>

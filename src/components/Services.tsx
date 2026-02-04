@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Sparkles, Sun, Zap, Droplet, Shield, Car, Sofa, Wind, Wrench, Palette } from 'lucide-react';
+import { useRef } from 'react';
 
 const services = [
   {
@@ -7,67 +8,94 @@ const services = [
     title: 'Headlight Restoration',
     description: 'Crystal-clear headlights that improve visibility and aesthetics',
     color: 'from-yellow-500 to-orange-500',
+    gradient: 'from-yellow-500/20 to-orange-500/20',
   },
   {
     icon: Sparkles,
     title: 'Interior Detailing',
     description: 'Deep cleaning and conditioning for a showroom-fresh cabin',
     color: 'from-cyan-500 to-blue-500',
+    gradient: 'from-cyan-500/20 to-blue-500/20',
   },
   {
     icon: Zap,
     title: 'Engine Detailing',
     description: 'Professional engine bay cleaning and protection',
     color: 'from-purple-500 to-pink-500',
+    gradient: 'from-purple-500/20 to-pink-500/20',
   },
   {
     icon: Palette,
     title: 'Paint Correction',
     description: 'Remove swirls and scratches for a mirror-like finish',
     color: 'from-green-500 to-teal-500',
+    gradient: 'from-green-500/20 to-teal-500/20',
   },
   {
     icon: Wrench,
     title: 'Scratch & Dent Removal',
     description: 'Expert repair services to restore your vehicle',
     color: 'from-red-500 to-orange-500',
+    gradient: 'from-red-500/20 to-orange-500/20',
   },
   {
     icon: Car,
     title: 'Caliper Restoration',
     description: 'Caliper cleaning and custom painting services',
     color: 'from-indigo-500 to-purple-500',
+    gradient: 'from-indigo-500/20 to-purple-500/20',
   },
   {
     icon: Sofa,
     title: 'Interior Valets',
     description: 'Complete interior cleaning and sanitization',
     color: 'from-pink-500 to-rose-500',
+    gradient: 'from-pink-500/20 to-rose-500/20',
   },
   {
     icon: Shield,
     title: 'PPF & Ceramic Coating',
     description: 'Ultimate paint protection and hydrophobic coating',
     color: 'from-blue-500 to-cyan-500',
+    gradient: 'from-blue-500/20 to-cyan-500/20',
   },
   {
     icon: Wind,
     title: 'Steaming',
     description: 'Chemical-free deep cleaning with high-pressure steam',
     color: 'from-teal-500 to-green-500',
+    gradient: 'from-teal-500/20 to-green-500/20',
   },
   {
     icon: Droplet,
     title: 'Home Upholstery Cleaning',
     description: 'Professional cleaning for your home furniture',
     color: 'from-cyan-500 to-teal-500',
+    gradient: 'from-cyan-500/20 to-teal-500/20',
   },
 ];
 
 export default function Services() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   return (
-    <section id="services" className="py-20 bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" ref={containerRef} className="py-20 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
+      {/* Floating Background Elements */}
+      <motion.div 
+        className="absolute top-20 right-10 w-72 h-72 bg-cyan-200 rounded-full filter blur-3xl opacity-20"
+        style={{ y }}
+      />
+      <motion.div 
+        className="absolute bottom-20 left-10 w-96 h-96 bg-teal-200 rounded-full filter blur-3xl opacity-20"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-100, 100]) }}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -76,23 +104,49 @@ export default function Services() {
           className="text-center mb-16"
         >
           <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
+            initial={{ scale: 0, rotate: -180 }}
+            whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ 
+              duration: 0.5,
+              type: "spring",
+              stiffness: 200
+            }}
             className="inline-block mb-4"
           >
-            <div className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+            <motion.div 
+              className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg"
+              animate={{
+                boxShadow: [
+                  '0 0 20px rgba(6, 182, 212, 0.3)',
+                  '0 0 30px rgba(6, 182, 212, 0.5)',
+                  '0 0 20px rgba(6, 182, 212, 0.3)',
+                ],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               ⚡ Discounted up to 50%
-            </div>
+            </motion.div>
           </motion.div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <motion.h2 
+            className="text-4xl md:text-5xl font-bold text-slate-900 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             Our Premium Services
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
             Professional detailing services tailored to your vehicle's needs
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -101,18 +155,43 @@ export default function Services() {
             return (
               <motion.div
                 key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -10, transition: { duration: 0.2 } }}
-                className="group"
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -15, 
+                  scale: 1.03,
+                  transition: { duration: 0.3 } 
+                }}
+                className="group relative"
               >
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <motion.div 
+                  className={`absolute inset-0 bg-gradient-to-br ${service.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl`}
+                />
+                <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full">
+                  <motion.div 
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4 relative overflow-hidden`}
+                    whileHover={{ 
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: 1.1 
+                    }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 animate-shimmer"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <Icon className="w-8 h-8 text-white relative z-10" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-600 transition-colors">
                     {service.title}
                   </h3>
                   <p className="text-gray-600 mb-4">
